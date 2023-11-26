@@ -65,12 +65,12 @@ _strncpy_return
 		EXPORT	_malloc
 _malloc
 		; save registers
-		PUSH 	{r1-r12, lr}
+		PUSH {r1-r12,lr}
 		; set the system call # to R7
-		MOV 	r7, #0x3
-	    SVC     #0x0
+		MOV r7, #0x4
+	        SVC     #0x0
 		; resume registers
-		POP 	{r1-r12, lr}
+		POP {r1-r12, lr}
 		MOV		pc, lr
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -82,12 +82,12 @@ _malloc
 		EXPORT	_free
 _free
 		; save registers
-		PUSH 	{r1-r12, lr}
+		PUSH {r1-r12,lr}
 		; set the system call # to R7
-		MOV 	R7, #0x4
-        SVC     #0x0
+		MOV r7, #0x5
+        	SVC     #0x0
 		; resume registers
-		POP 	{r1-r12, lr}
+		POP {r1-r12, lr}
 		MOV		pc, lr
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -101,12 +101,12 @@ _free
 		EXPORT	_alarm
 _alarm
 		; save registers
-		PUSH 	{r1-r12, lr}
+		PUSH {r1-r12,lr}
 		; set the system call # to R7
-		MOV 	r7, #0x1
-        SVC     #0x0
-		; resume registers
-		POP 	{r1-r12, lr}
+		MOV r7, #0x1
+        	SVC     #0x0
+		; resume registers	
+		POP {r1-r12, lr}
 		MOV		pc, lr		
 			
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -120,17 +120,13 @@ _alarm
 		EXPORT	_signal
 _signal
 		; save registers
-		PUSH 	{r1-r12, lr}
+		PUSH {r1-r12,lr}
 		; set the system call # to R7
-		MOV 	r7, #0x2
-        SVC     #0x0
+		MOV r7, #0x2
+        	SVC     #0x0
 		; resume registers
-		POP 	{r1-r12, lr}
+		POP {r1-r12, lr}
 		MOV		pc, lr	
-
-;EXTRA CREDIT MEMCPY IF WE WANT
-_memcpy
-		MOV 	pc, lr
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		END			

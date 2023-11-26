@@ -41,9 +41,7 @@ _timer_start
 		EXPORT		_timer_update
 _timer_update
 	;; Implement by yourself
-		PUSH	{r1-r12, lr}
 	
-		POP		{r1-r12, lr}
 		MOV		pc, lr		; return to SysTick_Handler
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
