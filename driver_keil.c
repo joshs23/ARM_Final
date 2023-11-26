@@ -2,7 +2,7 @@ extern void _bzero( void*, int );
 extern char* _strncpy( char*, char*, int );
 extern void* _malloc( int );
 extern void _free( void* );
-extern void* _memcpy( );
+//extern void* _memcpy( ); this is extra credit
 extern void* _signal( int signum, void (*fn)(int) );
 extern unsigned int _alarm( unsigned int );
 
@@ -45,10 +45,10 @@ int main( ) {
 	*alarmed = 1;
 	_signal( SIG_ALRM, sig_handler1 );
 	_alarm( 2 );
-	while ( *alarmed != 2 ) {
+	/*while ( *alarmed != 2 ) {
 		void* mem9 = _malloc( 4 );	
 		_free( mem9 );		
-	}
+	}*/
 	
 	_signal( SIG_ALRM, sig_handler2 );
 	_alarm( 3 );
