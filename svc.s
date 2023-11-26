@@ -7,39 +7,16 @@ SYSTEMCALLTBL	EQU		0x20007B00 ; originally 0x20007500
 SYS_EXIT		EQU		0x0		; address 20007B00
 SYS_ALARM		EQU		0x1		; address 20007B04
 SYS_SIGNAL		EQU		0x2		; address 20007B08
-SYS_MALLOC		EQU		0x3		; address 20007B0C
-SYS_FREE		EQU		0x4		; address 20007B10
-;SYS_MEMCPY		EQU		0x5		; address 20007B14 extra credit
+SYS_MEMCPY		EQU		0x3		; address 20007B0C
+SYS_MALLOC		EQU		0x4		; address 20007B10
+SYS_FREE		EQU		0x5		; address 20007B14
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; System Call Table Initialization
 		EXPORT	_syscall_table_init
 _syscall_table_init
 	;; Implement by yourself
-		PUSH	{lr}
-		LDR		r0, =SYSTEMCALLTBL
-		
-		LDR		r1, =_sys_exit
-		STR		r1, [r0]
-		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_alarm
-		STR		r1, [r0]
-		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_signal
-		STR		r1, [r0]
-		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_malloc
-		STR		r1, [r0]
-		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_free
-		STR		r1, [r0]
-		
-		; memcpy extra credit
-		POP		{lr}
+	
 		MOV		pc, lr
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,71 +24,10 @@ _syscall_table_init
         EXPORT	_syscall_table_jump
 _syscall_table_jump
 	;; Implement by yourself
-		PUSH	{lr}
-		LDR		r11, =SYSTEMCALLTBL
-		MOV		r1, r7
-		; extra credit memcpy
-		
-		CMP		r1, #SYS_FREE
-		BEQ		_sys_free
-		
-		CMP		r1, #SYS_MALLOC
-		BEQ		_sys_malloc
-		
-		CMP		r1, #SYS_SIGNAL
-		BEQ		_sys_signal
-		
-		CMP		r1, #SYS_ALARM
-		BEQ		_sys_alarm
-		
-		BL		_sys_exit
-		
-		POP		{lr}
-		MOV		pc, lr ; return to SVC_Handler (startup)			
-		
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; System Call
-
-_sys_exit
-		PUSH	{lr}
-		BLX		r11
-		POP		{lr}
-		BX		lr
-		
-_sys_alarm
-		IMPORT	_timer_start
-		LDR		r11, =_timer_start
-		PUSH	{lr}
-		BLX		r11
-		POP		{lr}
-		BX		lr
-		
-_sys_signal
-		IMPORT	_signal_handler
-		LDR		r11, =_signal_handler
-		PUSH	{lr}
-		BLX		r11
-		POP		{lr}
-		BX		lr
-		
-_sys_malloc
-		IMPORT	_kalloc
-		LDR		r11, =_kalloc
-		PUSH	{lr}
-		BLX		r11 ; branch to _kalloc (heap.s)
-		POP		{lr}
-		BX		lr ; return to syscall_table_jump
-
-_sys_free
-		IMPORT	_kfree
-		LDR		r11, =_kfree
-		PUSH	{lr}
-		BLX		r11
-		POP		{lr}
-		BX		lr
-		
-_sys_memcpy
-		;extra credit
+	
+		MOV		pc, lr			
 		
 		END
+
+
+		
