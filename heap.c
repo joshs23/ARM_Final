@@ -235,10 +235,9 @@ void _kinit( ) {
   // Initializing MCB: you need to implement in step 2's assembly code.
   *(short *)&array[ m2a( mcb_top ) ] = max_size;
     
-	// changed to n instead of i for compiler error
-  for ( int n = 0x20006804; n < 0x20006C00; n += 2 ) {
-    array[ m2a( n ) ] = 0;
-    array[ m2a( n + 1) ] = 0;
+  for ( int i = 0x20006804; i < 0x20006C00; i += 2 ) {
+    array[ m2a( i ) ] = 0;
+    array[ m2a( i + 1) ] = 0;
   }
 }
 
