@@ -144,6 +144,7 @@ _kalloc ; FUNCTION IS NOT FINISHED
 		BL		_ralloc ; branch to _ralloc (recursive allocation)
 		
 		POP		{lr}
+		MOV		R0, R12
 		MOV		pc, lr ; return to _sys_malloc (svs.s)
 		
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -152,6 +153,7 @@ _kalloc ; FUNCTION IS NOT FINISHED
 		EXPORT	_kfree
 _kfree
 	;; Implement by yourself
+
 		MOV		pc, lr					; return from rfree( )
 		
 		END
