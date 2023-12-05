@@ -42,7 +42,7 @@ _heap_init_loop
 ; Recursive Allocation Function
 ;void* _r_alloc(int size, int startAddress, int endAddress, int index)
 		EXPORT	_ralloc
-_ralloc ; FUNCTION IS NOT FINISHED ++++++++++++++++++++++++++++++++++++++++++++++++++++
+_ralloc
 	;; Helper function for _kalloc
 		; r0 = size
 		; r1 = start address of the current range (left or right)
@@ -95,7 +95,7 @@ _else
 		BNE		_return_invalid ; i.e. used
 		
 		LDR		r10, [r1] ; value = value at start address of current range
-		CMP		r10, r8 ; if(value < act_entire_size
+		CMP		r10, r0 ; if(value < act_entire_size
 		BLT		_return_invalid ; i.e. can't fit
 		
 		ORR		r10, r8, #0x1
