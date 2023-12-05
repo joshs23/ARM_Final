@@ -9,7 +9,7 @@ SYS_ALARM		EQU		0x1		; address 20007B04
 SYS_SIGNAL		EQU		0x2		; address 20007B08
 SYS_MALLOC		EQU		0x3		; address 20007B0C
 SYS_FREE		EQU		0x4		; address 20007B10
-;SYS_MEMCPY		EQU		0x5		; address 20007B14 extra credit
+;SYS_MEMCPY		EQU		0x5		; address 20007B14 extra credit-------------------------------------TODO if time allows
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; System Call Table Initialization
@@ -19,26 +19,29 @@ _syscall_table_init
 		PUSH	{lr}
 		LDR		r0, =SYSTEMCALLTBL
 		
-		LDR		r1, =_sys_exit
-		STR		r1, [r0]
+		LDR		r1, =_sys_exit   ;;; address of _sys_exit is loaded to r1
+		STR		r1, [r0]         ;;; Store address of _sys_exit to the start of table
 		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_alarm
-		STR		r1, [r0]
+		ADD		r0, r0, #0x4     ;;; increment table location by 4 to address 20007B04
+		LDR		r1, =_sys_alarm  ;;; address of _sys_alarm is loaded to r1
+		STR		r1, [r0]         ;;; Store address of _sys_alarm to the table
 		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_signal
-		STR		r1, [r0]
+		ADD		r0, r0, #0x4     ;;; increment table location by 4 to address 20007B08
+		LDR		r1, =_sys_signal ;;; address of _sys_signal is loaded to r1
+		STR		r1, [r0]         ;;; Store address of _sys_signal to the table
+								
+		ADD		r0, r0, #0x4     ;;; increment table location by 4 to address 20007B0C
+		LDR		r1, =_sys_malloc ;;; address of _sys_malloc is loaded to r1
+		STR		r1, [r0]         ;;; Store address of _sys_malloc to the table
+								
+		ADD		r0, r0, #0x4     ;;; increment table location by 4 to address 20007B10
+		LDR		r1, =_sys_free   ;;; address of _sys_free is loaded to r1
+		STR		r1, [r0]         ;;; Store address of _sys_free to the table
+								
+		;;ADD		r0, r0, #0x4     ;;; increment table location by 4 to address 20007B14
+		;;LDR		r1, =_sys_memcpy ;;; address of _sys_memcpy is loaded to r1
+		;;STR		r1, [r0]         ;;; Store address of _sys_memcpy to the table
 		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_malloc
-		STR		r1, [r0]
-		
-		ADD		r0, r0, #0x4
-		LDR		r1, =_sys_free
-		STR		r1, [r0]
-		
-		; memcpy extra credit
 		POP		{lr}
 		MOV		pc, lr
 
@@ -50,7 +53,7 @@ _syscall_table_jump
 		PUSH	{lr}
 		LDR		r11, =SYSTEMCALLTBL
 		MOV		r1, r7
-		; extra credit memcpy
+		; extra credit memcpy TODO------------------------------------------------------
 		
 		CMP		r1, #SYS_FREE
 		BEQ		_sys_free
@@ -63,6 +66,9 @@ _syscall_table_jump
 		
 		CMP		r1, #SYS_ALARM
 		BEQ		_sys_alarm
+		
+		;;CMP		r1, #SYS_MEMCPY
+		;;BEQ		_sys_memcpy
 		
 		BL		_sys_exit
 		
