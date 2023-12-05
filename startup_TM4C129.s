@@ -273,6 +273,8 @@ SVC_Handler     PROC 		; (Step 2)
 				; Retrieve registers
 				POP		{lr}
 				; Go back to stdlib.s
+				MRS    R1, PSP
+                STR    R0, [R1] 
                 BX		lr
                 ENDP
 DebugMon_Handler\
@@ -296,8 +298,10 @@ SysTick_Handler\
 				; Retrieve registers
 				POP		{r1-r12, lr}
 				; Change from MSP to PSP
-				MRS		r0, MSP
-				MSR		PSP, r0
+				LDR		R0, =__initial_user_sp
+				MSR		PSP, R0
+				MOVS	R0,	#3	; Set SPSEL bit 1, nPriv bit 0
+				MSR		CONTROL, R0	; Now thread mode uses PSP for user
 				; Go back to the user program
                 BX		lr
                 ENDP
