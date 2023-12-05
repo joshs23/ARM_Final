@@ -105,17 +105,17 @@ _sys_malloc
 		IMPORT	_kalloc
 		LDR		r11, =_kalloc
 		PUSH	{lr}
-		BLX		r11 ; branch to _kalloc (heap.s)
+		BLX		r11 	; branch to _kalloc (heap.s)
 		POP		{lr}
-		BX		lr ; return to syscall_table_jump
+		BX		lr 		; return to syscall_table_jump
 
 _sys_free
 		IMPORT	_kfree
 		LDR		r11, =_kfree
 		PUSH	{lr}
-		BLX		r11
+		BLX		r11  	; branch to _kfree (heap.s)
 		POP		{lr}
-		BX		lr
+		BX		lr  	; return to syscall_table_jump
 		
 _sys_memcpy
 		;extra credit
