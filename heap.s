@@ -95,7 +95,7 @@ _else
 		BNE		_return_invalid ; i.e. used
 		
 		LDR		r10, [r1] ; value = value at start address of current range
-		CMP		r10, r8 ; if(value < act_entire_size)
+    CMP		r10, r8 ; if(value < act_entire_size)
 		BLT		_return_invalid ; i.e. can't fit
 		
 		ORR		r10, r8, #0x1
