@@ -270,11 +270,11 @@ SVC_Handler     PROC 		; (Step 2)
 				PUSH	{lr}
 				; Invoke _syscall_table_jump
 				BL		_syscall_table_jump
+				MRS    R1, PSP
+                STR    R0, [R1]
 				; Retrieve registers
 				POP		{lr}
-				; Go back to stdlib.s
-				MRS    R1, PSP
-                STR    R0, [R1] 
+				; Go back to stdlib.s 
                 BX		lr
                 ENDP
 DebugMon_Handler\
