@@ -95,7 +95,7 @@ _else
 		BNE		_return_invalid ; i.e. used
 		
 		LDR		r10, [r1] ; value = value at start address of current range
-    CMP		r10, r8 ; if(value < act_entire_size)
+		CMP		r10, r8 ; if(value < act_entire_size)
 		BLT		_return_invalid ; i.e. can't fit
 		
 		ORR		r10, r8, #0x1
@@ -174,7 +174,7 @@ _rfree ;NOT FINISHED ACTIVE ERROR FOR MEM7
 		SDIV	r12, r3, r4 ; if ( ( mcb_offset / mcb_chunk ) % 2 == 0 ) )
 		AND		r12, r12, #0x1
 		CMP		r12, #0x0
-		MOV		r6, r12 ; r12 is indicator of left or right
+		MOV		r6, r12 ; r12 is indicator of left or right 
 		BEQ		_left_free
 
 _right_free
@@ -213,6 +213,7 @@ _right_free2
 		STRH 	r5, [r6] ; *(short *)&array[m2a(mcb_addr - mcb_chunk)] = my_size
 		MOV		r0, r6 
 		BL		_rfree ; return _rfree(mcb_addr - mcb_chunk)
+		B		_done
 		
 _left_free2
 		STRH	r9, [r6] ; *(short *)&array[m2a(mcb_addr + mcb_chunk)] = 0
@@ -220,6 +221,7 @@ _left_free2
 		STRH	r5, [r0] ; *(short *)&array[m2a(mcb_addr)] = my_size
 		
 		BL		_rfree ; return _rfree(mcb_addr)
+		B		_done
 		
 _return_zero
 		MOV		r0, #0x0
@@ -243,12 +245,12 @@ _kfree ;NOT FINISHED UNTIL _RFREE BUG IS RESOLVED
 		
 		CMP		r1, r2 ; if(addr < heap_top)
 		BLT		_return_null
-		CMP		r1, r3 ; if(addr > heap_top)
+		CMP		r1, r3 ; if(addr > heap_bot)
 		BGT		_return_null
 		
 		LDR		r4, =MCB_TOP
 		SUB		r5, r1, r2 ; (addr - heap_top)
-		ASR		r5, r5, #0x4 ; (addr - heap_top) / 16
+		ASR		r5, r5, #0x4 ; (addr - heap_top) / 16 
 		ADD		r5, r4, r5 ; mcb_addr = mcb_top + (addr - heap_top) / 16
 		
 		MOV		r0, r5 ; mcb_addr is param of _rfree
