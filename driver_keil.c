@@ -34,9 +34,9 @@ int main( ) {
 	_free( mem6 );
 	_free( mem5 );
 	_free( mem1 );
-	_free( mem7 ); //current error in _rfree for this line
+	_free( mem7 );
 	_free( mem2 );
-	void* mem8 = _malloc( 4096 ); //prev error effects this (returns null) when it should return 0x20006800
+	void* mem8 = _malloc( 4096 );
 	_free( mem4 );
 	_free( mem3 );
 	_free( mem8 );

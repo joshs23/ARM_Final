@@ -30,6 +30,7 @@ _timer_init
 	
 		LDR		r0, =STRELOAD_MX		;;set to max val to count down from
 		LDR		r1, =STRELOAD			;;store in register
+		STR		r0, [r1]				; Load the maximum value to SYST_RVR(STRELOAD)
 	
 		MOV		r1, #0x0				;;have to clear these each time (counter, countflag, current value register, address)
 		LDR		r0, =STCURR_CLR			
@@ -91,10 +92,17 @@ _timer_update_done
 	    EXPORT	_signal_handler
 _signal_handler
 	;; Implement by yourself
+	; r0 = signum
+	; r1 = *func
 		;;;;;
-		LDR		r0, =USR_HANDLER			; send to the address of given signal handler function
-		STR		r1, [r0]
-		;;;;;
-		MOV		pc, lr		; return to Reset_Handler
+		CMP 	r0, #SIGALRM			;check if the signum is 14
+		BNE		_done					; if not SIG_ALRM, do nothing
+		LDR		r2, =USR_HANDLER		; load the USR_HANDLER address to r2
+		LDR		r3, [r2]				; retain previous value to return
+		STR		r1, [r2]				; save the *func to USR_HANDLER
+		MOV		r0, r3					; Return the previous value of 0x2007B84 to
+										; main( ) through R0.
+_done	
+		MOV		pc, lr					; return to Reset_Handler
 		
 		END		
