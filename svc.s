@@ -97,9 +97,9 @@ _sys_signal
 		IMPORT	_signal_handler
 		LDR		r11, =_signal_handler
 		PUSH	{lr}
-		BLX		r11
+		BLX		r11		; branch to _signal_handler (timer.s)
 		POP		{lr}
-		BX		lr
+		BX		lr		; return to syscall_table_jump
 		
 _sys_malloc
 		IMPORT	_kalloc

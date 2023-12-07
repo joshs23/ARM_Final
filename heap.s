@@ -18,7 +18,7 @@ INVALID		EQU		-1				; an invalid id
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Memory Control Block Initialization
 		EXPORT	_heap_init
-_heap_init ;FINISHED
+_heap_init
 	;; Implement by yourself
 		;Initialize the first entry (mcb[0]) to indicate the entire 16KB space is available
 		LDR		r1, =MCB_TOP
@@ -42,7 +42,7 @@ _heap_init_loop
 ; Recursive Allocation Function
 ;void* _r_alloc(int size, int startAddress, int endAddress, int index)
 		EXPORT	_ralloc
-_ralloc ;FINISHED
+_ralloc
 	;; Helper function for _kalloc
 		; r0 = size
 		; r1 = start address of the current range (left or right)
@@ -157,7 +157,7 @@ _alloc
 ; helper
 ;int _rfree( int mcb_addr ) {
 		EXPORT _rfree
-_rfree ;NOT FINISHED ACTIVE ERROR FOR MEM7
+_rfree 
 		PUSH	{lr}
 		LDRH	r1, [r0] ; mcb_contents = *(short)&array[ m2a( mcb_addr) ]
 		LDR		r2, =MCB_TOP
@@ -235,7 +235,7 @@ _done
 ; Kernel Memory De-allocation
 ; void free( void *ptr )
 		EXPORT	_kfree
-_kfree ;NOT FINISHED UNTIL _RFREE BUG IS RESOLVED
+_kfree
 	;; Implement by yourself
 		PUSH	{lr} ; saves pointer for later
 		
