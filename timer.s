@@ -23,7 +23,18 @@ USR_HANDLER     EQU		0x20007B84		; Address of a user-given signal handler functi
 		EXPORT		_timer_init
 _timer_init
 	;; Implement by yourself
+		;;;;;;
+		LDR		r1, =STCTRL				;;load control/status register
+		LDR		r0, =STCTRL_STOP		;;set interupt and clock enable off
+		STR		r0, [r1]				;;store control/status register
 	
+		LDR		r0, =STRELOAD_MX		;;set to max val to count down from
+		LDR		r1, =STRELOAD			;;store in register
+	
+		MOV		r1, #0x0				;;have to clear these each time (counter, countflag, current value register, address)
+		LDR		r0, =STCURR_CLR			
+		STR		r1, [r0]
+		;;;;;;;
 		MOV		pc, lr		; return to Reset_Handler
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32,7 +43,15 @@ _timer_init
 		EXPORT		_timer_start
 _timer_start
 	;; Implement by yourself
+		;;;;;
+		LDR		r1, =SECOND_LEFT		;;load/store register with how many seconds left
+		STR		r0, [r1]
 	
+		LDR		r0, =STCTRL				;;load control/status register
+		LDR		r1, =STCTRL_GO			;;set interupt and clock enable on
+		STR 	r1, [r0]				;;store the new value
+	
+		;;;;;
 		MOV		pc, lr		; return to SVC_Handler
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41,9 +60,29 @@ _timer_start
 		EXPORT		_timer_update
 _timer_update
 	;; Implement by yourself
-		PUSH	{r1-r12, lr}
+		;;PUSH	{r1-r12, lr}
+		;;;;;
+		LDR		r1, =SECOND_LEFT		;;grab seconds left on alarm
+		LDR		r0, [r1]
 	
+		SUB 	r0, r0, #1				;;decrement by 1
+		STR		r0, [r1]
+		CMP		r0, #0					;;branches to _timer_update_done if value isnt 0
+		BNE		_timer_update_done		;;otherwise it needs to stop timer and invoke user function
+	
+		LDR		r0, =STCTRL				;;load control/status register
+		LDR		r1, =STCTRL_STOP		;;set interupt and clock enable off
+		STR		r1, [r0]				;;store control/status register
+	
+		LDR		r0, =USR_HANDLER		;;branch to USR signal handler
+		LDR		r0, [r0]
+		;;STMDB 	sp!, {lr}
+		PUSH	{r1-r12, lr}			;;save and resume lr
+		BLX		r0
+		;;LDMIA	sp!, {lr}
 		POP		{r1-r12, lr}
+		;;;;;
+_timer_update_done
 		MOV		pc, lr		; return to SysTick_Handler
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -52,7 +91,10 @@ _timer_update
 	    EXPORT	_signal_handler
 _signal_handler
 	;; Implement by yourself
-	
+		;;;;;
+		LDR		r0, =USR_HANDLER			; send to the address of given signal handler function
+		STR		r1, [r0]
+		;;;;;
 		MOV		pc, lr		; return to Reset_Handler
 		
 		END		
