@@ -52,22 +52,22 @@ _syscall_table_jump
 	;; Implement by yourself
 		PUSH	{lr}
 		LDR		r11, =SYSTEMCALLTBL
-		MOV		r1, r7
+		MOV		r2, r7
 		; extra credit memcpy TODO------------------------------------------------------
 		
-		CMP		r1, #SYS_FREE
+		CMP		r2, #SYS_FREE
 		BEQ		_sys_free
 		
-		CMP		r1, #SYS_MALLOC
+		CMP		r2, #SYS_MALLOC
 		BEQ		_sys_malloc
 		
-		CMP		r1, #SYS_SIGNAL
+		CMP		r2, #SYS_SIGNAL
 		BEQ		_sys_signal
 		
-		CMP		r1, #SYS_ALARM
+		CMP		r2, #SYS_ALARM
 		BEQ		_sys_alarm
 		
-		;;CMP		r1, #SYS_MEMCPY
+		;;CMP		r2, #SYS_MEMCPY
 		;;BEQ		_sys_memcpy
 		
 		BL		_sys_exit
@@ -89,9 +89,9 @@ _sys_alarm
 		IMPORT	_timer_start
 		LDR		r11, =_timer_start
 		PUSH	{lr}
-		BLX		r11
+		BLX		r11		; branch to _timer_start (timer.s)
 		POP		{lr}
-		BX		lr
+		BX		lr		; return to syscall_table_jump
 		
 _sys_signal
 		IMPORT	_signal_handler
