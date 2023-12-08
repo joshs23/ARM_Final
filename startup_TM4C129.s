@@ -291,19 +291,13 @@ SysTick_Handler\
                 PROC		; (Step 2)
 				EXPORT  SysTick_Handler           [WEAK]
 				IMPORT	_timer_update
-				; Save registers
-				PUSH	{r1-r12, lr}
-				; Invoke _timer_update
-				BL 		_timer_update
-				; Retrieve registers
-				POP		{r1-r12, lr}
+				PUSH	{r0-r12, lr}			; Save registers
+				BL 		_timer_update			; Invoke _timer_update
+				POP		{r0-r12, lr}			; Retrieve registers	
 				; Change from MSP to PSP
-				LDR		R0, =__initial_user_sp
-				MSR		PSP, R0
-				MOVS	R0,	#3	; Set SPSEL bit 1, nPriv bit 0
-				MSR		CONTROL, R0	; Now thread mode uses PSP for user
-				; Go back to the user program
-                BX		lr
+				MOVS	R0,	#3					; Set SPSEL bit 1, nPriv bit 0
+				MSR		CONTROL, R0				; Now thread mode uses PSP for user
+                BX		lr						; Go back to the user program
                 ENDP
 
 GPIOA_Handler\
