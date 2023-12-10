@@ -129,9 +129,66 @@ _signal
 		POP 	{r1-r12, lr}
 		MOV		pc, lr	
 
-;EXTRA CREDIT MEMCPY IF WE WANT
-_memcpy
-		MOV 	pc, lr
+;EXTRA CREDIT--------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; int abs(int)
+; r0 = int
+		EXPORT _abs
+_abs
+		STMFD	sp!, {r1-r12,lr}
+		MOV		r1, #0x0
+		CMP 	r0, r1
+		BGE		_abs_done		; check if the int is already poisitive
+		CMP		r0, #0x80000000 ; check if int is INT_MIN
+		BEQ		_handle_min_int
+		SUB		r0, r1, r0		; 0 + given value
+_abs_done
+		LDMFD	sp!, {r1-r12,lr}; resume registers
+		MOV 	pc, lr			; branch back to main()
+_handle_min_int
+		MOV		r0, #0x7FFFFFFF	; assign INT_MAX (2,147,483,647 to return if value is 
+								; -2,147,483,648. because this number does not exist in
+								; int as a positive. this is how stdlib.h handles this
+		B		_abs_done
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; The C library function int atoi(const char *str) converts the string argument str to 
+; an integer (type int).
+; int atoi(const char *str)
+; r0 str beginning address
+		EXPORT _atoi
+_atoi
+		STMFD	sp!, {r1-r12,lr}; save registers
+		MOV		r1, r0			; r1 = source address
+		MOV		r0, #0x0		; r2 = 0, start of the new int value
+		MOV		r5, #10			; set multiplier value for later
+		LDRB	r3, [r1], #0x1		; get the first char in the string
+_aloop
+		CMP		r3, #0x30		; compare to ASCII 0
+		BLT		_error			; string contains non int
+		CMP		r3, #0x39		; Compare to ASCII 9
+		BGT		_error			; string contains non int
+		
+		
+		MUL		r2, r0, r5		; move current digit to left 1 decimal place
+		SUB		r3, r3, #0x30	; translate from ASCII
+		ADD		r2, r2, r3		; add the next digit
+		CMP		r2, r0			; check if new value has overflowed, stdlib in 		
+		BLT		_error			; C does not handle this
+		
+		MOV		r0, r2			; value still valid
+		LDRB	r3, [r1], #0x1	; move to next char in string
+		CMP		r1, #0x0		; check if string is done
+		BEQ		_atoi_done		; if so, done
+		B		_aloop			; else, handle the next char
+		
+_error
+		MOV		r0, #0x0		;return 0 because string contained a non int
+_atoi_done	
+		LDMFD	sp!, {r1-r12,lr}; resume registers
+		MOV		pc, lr			; branch back to main()
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		END			
