@@ -180,7 +180,7 @@ _aloop
 		
 		MOV		r0, r2			; value still valid
 		LDRB	r3, [r1], #0x1	; move to next char in string
-		CMP		r1, #0x0		; check if string is done
+		CMP		r3, #0x0		; check if string is done
 		BEQ		_atoi_done		; if so, done
 		B		_aloop			; else, handle the next char
 		
