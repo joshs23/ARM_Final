@@ -98,7 +98,7 @@ _else
 		CMP		r10, r8 		; if(value < act_entire_size)
 		BLT		_return_invalid ; i.e. can't fit
 		
-		ORR		r10, r8, #0x1
+		ORR		r10, r8, #0x1	; mark as used
 		STR		r10, [r1]
 		
 		; return (void *)( heap_top + ( left - mcb_top ) * 16)
@@ -114,7 +114,7 @@ _else
 		
 		
 _found
-		STR		r9, [r6] 
+		STR		r9, [r6] ; change buddy allowed size
 		B		done
 		
 _return_invalid

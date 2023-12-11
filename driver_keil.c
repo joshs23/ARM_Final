@@ -62,6 +62,7 @@ int main( ) {
 		_free( mem9 );
 	}
 	
+	_free(alarmed);
 	//_abs extra credit test//////////////////////////////////////////////////
 	int test1 = 15;
 	int test2 = -15;
@@ -77,7 +78,7 @@ int main( ) {
    int val1, val2, val3;
    char str1[20], str2[20], str3[20];
    
-	 strcpy(str1, "98993489");
+	 strcpy(str1, "123");
 	 strcpy(str2, "this Is Not Int");
 	 strcpy(str3, "1a2b3c");
    val1 = _atoi(str1);
